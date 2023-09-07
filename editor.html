@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+</head>
+
+<body>
+  <style>
+    #container {
+      width: 100vw;
+      /* 100% of viewport width */
+      height: 100vh;
+      /* 100% of viewport height */
+    }
+
+    .ck-editor__editable[role="textbox"] {
+      /* editing area */
+      min-height: 1000px;
+    }
+
+    .ck-content .image {
+      /* block images */
+      max-width: 80%;
+      margin: 20px auto;
+    }
+
+    .default-style {
+      font-size: 30pt !important;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif !important;
+
+    }
+
+    #editor {
+      display: none;
+    }
+
+    #loading {
+      display: block;
+      text-align: center;
+      font-size: 1.2em;
+      margin: 0 auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 10px solid #f3f3f3;
+      /* Light grey */
+      border-top: 10px solid #f47609;
+      /* Blue */
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 2s linear infinite;
+    }
+  </style>
+  <div id="container">
+    <input type="hidden" id="fname" />
+    <!-- <button onclick="exportHTML();">Export as .doc</button> -->
+    <div id="editor" class="hidden"></div>
+    <div id="loading"></div>
+  </div>
+  <script src="./ckeditor.js"></script>
+  <script src="./docToText.js"></script>
+  <script>
+    var myeditor;
+    CKEDITOR.ClassicEditor.create(document.getElementById("editor"), {
+      toolbar: {
+        items: [
+          "findAndReplace",
+          "selectAll",
+          "|",
+          "heading",
+          "|",
+          "bold",
+          "italic",
+          "strikethrough",
+          "underline",
+          "code",
+          "subscript",
+          "superscript",
+          "removeFormat",
+          "|",
+          "bulletedList",
+          "numberedList",
+          "todoList",
+          "|",
+          "outdent",
+          "indent",
+          "|",
+          "undo",
+          "redo",
+          "-",
+          "fontSize",
+          "fontFamily",
+          "fontColor",
+          "fontBackgroundColor",
+          "highlight",
+          "|",
+          "alignment",
+          "|",
+          "link",
+          "insertImage",
+          "blockQuote",
+          "insertTable",
+          "mediaEmbed",
+          "codeBlock",
+          "htmlEmbed",
+          "|",
+          "specialCharacters",
+          "horizontalLine",
+          "pageBreak",
+          "|",
+          "textPartLanguage",
+          "|",
+          "sourceEditing",
+        ],
+        shouldNotGroupWhenFull: true,
+      },
+
+      list: {
+        properties: {
+          styles: true,
+          startIndex: true,
+          reversed: true,
+        },
+      },
+      heading: {
+        options: [
+          {
+            model: "paragraph",
+            title: "Paragraph",
+            class: "ck-heading_paragraph",
+          },
+          {
+            model: "heading1",
+            view: "h1",
+            title: "Heading 1",
+            class: "ck-heading_heading1",
+          },
+          {
+            model: "heading2",
+            view: "h2",
+            title: "Heading 2",
+            class: "ck-heading_heading2",
+          },
+          {
+            model: "heading3",
+            view: "h3",
+            title: "Heading 3",
+            class: "ck-heading_heading3",
+          },
+          {
+            model: "heading4",
+            view: "h4",
+            title: "Heading 4",
+            class: "ck-heading_heading4",
+          },
+          {
+            model: "heading5",
+            view: "h5",
+            title: "Heading 5",
+            class: "ck-heading_heading5",
+          },
+          {
+            model: "heading6",
+            view: "h6",
+            title: "Heading 6",
+            class: "ck-heading_heading6",
+          },
+        ],
+      },
+      placeholder: "Type your content",
+      fontFamily: {
+        options: [
+          "default",
+          "Arial, Helvetica, sans-serif",
+          "Courier New, Courier, monospace",
+          "Georgia, serif",
+          "Lucida Sans Unicode, Lucida Grande, sans-serif",
+          "Tahoma, Geneva, sans-serif",
+          "Times New Roman, Times, serif",
+          "Trebuchet MS, Helvetica, sans-serif",
+          "Verdana, Geneva, sans-serif",
+        ],
+        supportAllValues: true,
+      },
+      fontSize: {
+        options: [10, 12, 14, "default", 18, 20, 22],
+        supportAllValues: true,
+      },
+      htmlSupport: {
+        allow: [
+          {
+            name: /.*/,
+            attributes: true,
+            classes: true,
+            styles: true,
+          },
+        ],
+      },
+      htmlEmbed: {
+        showPreviews: true,
+      },
+      link: {
+        decorators: {
+          addTargetToExternalLinks: true,
+          defaultProtocol: "https://",
+          toggleDownloadable: {
+            mode: "manual",
+            label: "Downloadable",
+            attributes: {
+              download: "file",
+            },
+          },
+        },
+      },
+      mention: {
+        feeds: [
+          {
+            marker: "@",
+            feed: [
+              "@apple",
+              "@bears",
+              "@brownie",
+              "@cake",
+              "@cake",
+              "@candy",
+              "@canes",
+              "@chocolate",
+              "@cookie",
+              "@cotton",
+              "@cream",
+              "@cupcake",
+              "@danish",
+              "@donut",
+              "@dragée",
+              "@fruitcake",
+              "@gingerbread",
+              "@gummi",
+              "@ice",
+              "@jelly-o",
+              "@liquorice",
+              "@macaroon",
+              "@marzipan",
+              "@oat",
+              "@pie",
+              "@plum",
+              "@pudding",
+              "@sesame",
+              "@snaps",
+              "@soufflé",
+              "@sugar",
+              "@sweet",
+              "@topping",
+              "@wafer",
+            ],
+            minimumCharacters: 1,
+          },
+        ],
+      },
+      removePlugins: [
+        // 'ExportPdf',
+        //  "ExportWord",
+        "ImportWord",
+        "CKBox",
+        "CKFinder",
+        "EasyImage",
+        // 'Base64UploadAdapter',
+        "RealTimeCollaborativeComments",
+        "RealTimeCollaborativeTrackChanges",
+        "RealTimeCollaborativeRevisionHistory",
+        "PresenceList",
+        "Comments",
+        "TrackChanges",
+        "TrackChangesData",
+        "RevisionHistory",
+        "Pagination",
+        "WProofreader",
+        "MathType",
+      ],
+      updateSourceElementOnDestroy: true,
+    }).then((newEditor) => {
+      myeditor = newEditor;
+      document.getElementById("loading").style.display = "none";
+
+      var headerDefaultContent =
+        '<header style="color:grey">Header!</header>';
+      var footerDefaultContent =
+        '<footer style="color:grey">Footer!</footer>';
+      var defaultContent =
+        '<div style="position:relative;">' +
+        headerDefaultContent +
+        '<body style="position:absolute;top:50px;bottom:0;">Body content goes here</body>' +
+        footerDefaultContent +
+        "</div>";
+
+      myeditor.setData(defaultContent);
+      // imporWord();
+    });
+
+    // function imporWord() {
+    //   CKEDITOR.plugins.add("importword", {
+    //     icons: "importword",
+    //     init: function (editor) {
+    //       // Add the importWord command
+    //       myeditor.addCommand("importWord", {
+    //         exec: function (editor) {
+    //           // Open a file input dialog to choose the Word document to import
+    //           var input = document.createElement("input");
+    //           input.setAttribute("type", "file");
+    //           input.setAttribute("accept", ".doc,.docx");
+    //           input.onchange = function () {
+    //             // Read the selected file and insert its contents into the editor
+    //             var file = input.files[0];
+    //             var reader = new FileReader();
+    //             reader.onload = function (event) {
+    //               var data = event.target.result;
+    //               myeditor.setData(data);
+    //             };
+    //             reader.readAsText(file);
+    //           };
+    //           input.click();
+    //         },
+    //       });
+
+    //       // Add the toolbar button for the importWord command
+    //       myeditor.ui.addButton("ImportWord", {
+    //         label: "Import Word",
+    //         command: "importWord",
+    //         toolbar: "insert",
+    //       });
+    //     },
+    //   });
+    // }
+
+    function set(content) {
+      myeditor.setData(content);
+    }
+
+    function convertHtmlToWord(fileName, fname, fontSize, fontFamily) {
+
+      //fileName = document.getElementById("fname").value;
+      const htmlContent = document.querySelector('.ck-editor__main').innerHTML;
+      // var childElement = document.getElementByClassName("ck");
+      // htmlContent.removeChild(childElement);
+      const images = document.querySelectorAll('img');
+      const imagePromises = [];
+      for (let i = 0; i < images.length; i++) {
+        const imageSrc = images[i].getAttribute('src');
+        const imagePromise = fetch(imageSrc)
+          .then(response => response.blob())
+          .then(blob => {
+            images[i].setAttribute('src', URL.createObjectURL(blob));
+            return {
+              src: imageSrc,
+              data: blob,
+            };
+          });
+        imagePromises.push(imagePromise);
+      }
+      Promise.all(imagePromises).then(imageData => {
+        const tempContainer = document.createElement('div');
+        tempContainer.innerHTML = htmlContent;
+
+        const allElements = tempContainer.querySelectorAll('*');
+        for (let i = 0; i < allElements.length; i++) {
+          const tagName = allElements[i].tagName.toLowerCase();
+          if (tagName == 'p' || 'span') {
+            allElements[i].style.fontSize = fontSize;
+            allElements[i].style.fontFamily = fontFamily;
+          }
+        }
+
+
+        for (let i = 0; i < imageData.length; i++) {
+          const imageElement = tempContainer.querySelector(`img[src="${imageData[i].src}"]`);
+          const reader = new FileReader();
+          reader.readAsDataURL(imageData[i].data);
+          reader.onload = () => {
+            const base64Data = reader.result.split(',')[1];
+            imageElement.setAttribute('src', `data:${imageData[i].data.type};base64,${base64Data}`);
+          };
+        }
+        const updatedHtmlContent = tempContainer.innerHTML;
+        console.log(updatedHtmlContent);
+        const blob = new Blob([updatedHtmlContent], { type: 'application/vnd.ms-word' });
+        const anchor = document.createElement('a');
+        anchor.download = `${fname}.doc`;
+        anchor.href = URL.createObjectURL(blob);
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+      });
+    }
+
+    function setName(name) {
+      document.getElementById("fname").value = name;
+    }
+  </script>
+  <script>
+    function exportHTML(fileName, fontSize, fontFamily) {
+      var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+        "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+        "xmlns='http://www.w3.org/TR/REC-html40'>" +
+        "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title>" +
+        "<style>" +
+        "table {" +
+        "  border: 1px solid black;" +
+        "  border-collapse: collapse;" +
+        "}" +
+        "td {" +
+        "  border: 1px solid black;" +
+        "}" +
+        "body {" +
+        `  font-family: ${fontFamily} !important;` +
+        `  font-size: ${fontSize}pt !important;` +
+        "}" +
+        "</style>" +
+        "</head><body>";
+      var footer = "</body></html>";
+
+      var sourceHTML = header + document.getElementsByClassName("ck-editor__editable")[0].innerHTML + footer;
+      sourceHTML = sourceHTML.replace(`<body>`, `<body style="font-size:${fontSize}pt !important;font-family:${fontFamily} !important;">`);
+      console.log(sourceHTML);
+      var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      var fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = `${fileName}.doc`;
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+    }
+
+    function extractTextFromDoc() {
+      const docToText = new DocToText();
+      docToText.extractToText('C:\\Photo_app\\Documents\\Files\\ELV Test Report Format - Metal.docx', 'docx')
+        .then(function (text) {
+          console.log(text)
+        }).catch(function (error) {
+          console.log(error)
+        });
+    }
+  </script>
+</body>
+
+</html>
